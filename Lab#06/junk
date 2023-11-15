@@ -1,0 +1,89 @@
+#include <iostream>
+
+const int MAX_STUDENTS = 100;
+
+struct Student {
+    std::string name;
+    int id;
+    std::string faculty;
+    double gpa;
+};
+
+void merge(Student arr[], int left, int middle, int right) {
+    int n1 = middle - left + 1;
+    int n2 = right - middle;
+
+    Student leftArr[n1];
+    Student rightArr[n2];
+
+    for (int i = 0; i < n1; ++i)
+        leftArr[i] = arr[left + i];
+
+    for (int j = 0; j < n2; ++j)
+        rightArr[j] = arr[middle + 1 + j];
+
+    int i = 0, j = 0, k = left;
+    while (i < n1 && j < n2) {
+        if (leftArr[i].id <= rightArr[j].id) {
+            arr[k] = leftArr[i];
+            ++i;
+        } else {
+            arr[k] = rightArr[j];
+            ++j;
+        }
+        ++k;
+    }
+
+    while (i < n1) {
+        arr[k] = leftArr[i];
+        ++i;
+        ++k;
+    }
+
+    while (j < n2) {
+        arr[k] = rightArr[j];
+        ++j;
+        ++k;
+    }
+}
+
+void mergeSort(Student arr[], int left, int right) {
+    if (left < right) {
+        int middle = left + (right - left) / 2;
+
+        mergeSort(arr, left, middle);
+        mergeSort(arr, middle + 1, right);
+
+        merge(arr, left, middle, right);
+    }
+}
+
+int main() {
+    int n;
+    std::cout << "Enter the number of students: ";
+    std::cin >> n;
+
+    Student students[MAX_STUDENTS];
+
+    for (int i = 0; i < n; ++i) {
+        std::cout << "Enter details for student " << i + 1 << ":\n";
+        std::cout << "Name: ";
+        std::cin >> students[i].name;
+        std::cout << "ID: ";
+        std::cin >> students[i].id;
+        std::cout << "Faculty: ";
+        std::cin >> students[i].faculty;
+        std::cout << "GPA: ";
+        std::cin >> students[i].gpa;
+    }
+
+    mergeSort(students, 0, n - 1);
+
+    std::cout << "\nSorted list of students based on ID:\n";
+    for (int i = 0; i < n; ++i) {
+        std::cout << "Name: " << students[i].name << ", ID: " << students[i].id
+                  << ", Faculty: " << students[i].faculty << ", GPA: " << students[i].gpa << "\n";
+    }
+
+    return 0;
+}
